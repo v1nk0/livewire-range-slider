@@ -33,10 +33,10 @@ class LivewireRangeSlider extends Component
         $attribute = $attributes->wire('model');
         $separator = ',';
 
-        if ( 
-            (! $attribute->value() || is_bool($attribute->value())) || 
+        if (
+            (! $attribute->value() || is_bool($attribute->value())) ||
             empty($attribute->value())
-         )
+        )
         {
             throw new RangeSliderException(
                 'Missing or empty wire:model attribute.'
@@ -48,7 +48,7 @@ class LivewireRangeSlider extends Component
 
     public function getWireModelModifier(ComponentAttributeBag $attributes)
     {
-        if ($attributes->wire('model')->hasModifier('lazy')) 
+        if ($attributes->wire('model')->hasModifier('lazy'))
         {
             return self::LAZY_MODIFIER;
         }

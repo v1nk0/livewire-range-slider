@@ -21,11 +21,6 @@ window.LivewireRangeSlider = function (data) {
 
             noUiSlider.create(this.$refs.range, {
                 ...data.options,
-                tooltips: {
-                    to: function(numericValue) {
-                        return parseInt(numericValue);
-                    }
-                }
             })
 
             this.rangeSlider = this.$refs.range.noUiSlider;
@@ -39,7 +34,13 @@ window.LivewireRangeSlider = function (data) {
             );
         },
         handleUpdate(values, handle) {
-
+            // console.log(this.rangeSlider.target);
+            this.rangeSlider.target.dispatchEvent(
+                new CustomEvent('update', {
+                    bubbles: true,
+                    detail: { values: values },
+                }),
+            );
         },
         handleChange(values, handle) {
             if (this.models[handle]  && this.modifier !== LAZY_MODIFIER) {
