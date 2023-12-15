@@ -1,16 +1,16 @@
 import noUiSlider from 'nouislider';
-import 'nouislider/dist/nouislider.css'
 
 const CHANGE_EVENT = 'change';
 const EMPTY_MODIFER = 'empty';
 const LAZY_MODIFIER = 'lazy';
 const DEFER_MODIFIER = 'defer';
+const LIVE_MODIFIER = 'live';
 
 window.LivewireRangeSlider = function (data) {
     return {
         rangeSlider: null,
         models: [],
-        modifier: EMPTY_MODIFER,
+        modifier: LIVE_MODIFIER,
         handleHistory: null,
         init() {
             this.setup();
@@ -20,20 +20,31 @@ window.LivewireRangeSlider = function (data) {
                 return;
 
             noUiSlider.create(this.$refs.range, {
-                ...data.options
+                ...data.options,
+                tooltips: {
+                    to: function(numericValue) {
+                        return parseInt(numericValue);
+                    }
+                }
             })
 
             this.rangeSlider = this.$refs.range.noUiSlider;
 
-            this.rangeSlider.on(CHANGE_EVENT, 
+            this.rangeSlider.on('update',
                 (values, handle) => this.handleUpdate(values, handle)
-            ); 
+            );
+
+            this.rangeSlider.on('change',
+                (values, handle) => this.handleChange(values, handle)
+            );
         },
         handleUpdate(values, handle) {
+
+        },
+        handleChange(values, handle) {
             if (this.models[handle]  && this.modifier !== LAZY_MODIFIER) {
-                this.$wire.set(
-                    this.models[handle], values[handle], this.isDeferred()
-                );
+                window.Livewire.find(this.$wire.id).set(this.models[handle], values[handle]);
+                // this.$wire.set(this.models[handle], values[handle], this.isDeferred());
             }
 
             // Save handle index
